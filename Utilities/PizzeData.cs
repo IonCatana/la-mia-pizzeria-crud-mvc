@@ -17,7 +17,7 @@ namespace la_mia_pizzeria_model.Utilities
 
             for (int i = 0; i < nuovaListaPizze.Count; i++)
             {
-                Pizze Margherita = new Pizze("~/img_pizza/Margherita.png" + i, "Titolo Pizza: " + i, "Pomodoro San Marzano D.O.P., fior di latte di Agerola, basilico e olio evo.", "prezzo");                
+                Pizze Margherita = new Pizze("~/img/margherita.ipg" + i, "Titolo Pizza: " + i, "Pomodoro San Marzano D.O.P., fior di latte di Agerola, basilico e olio evo.", "prezzo");                
                 nuovaListaPizze.Add(Margherita);
                 
                 

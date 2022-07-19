@@ -16,7 +16,7 @@ namespace la_mia_pizzeria_model.Controllers
             }
             //Il controller dice le liste e il modello
             //Il controller si chiama la lista delle pizze con il metodo GetPizze()
-            //Poi passo un razor, quindi inserisco il nome della lista, cioé Pize
+            //Poi passo un razor, quindi insertisco
             return View("HomePage", pizze);
         }
         //Creo una nuova pagina, quindi per prima cosa creo un metodo nuovo
