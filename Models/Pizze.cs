@@ -24,7 +24,7 @@ namespace la_mia_pizzeria_model.Models
         [Range(0.01,30, ErrorMessage = "Inserisci un prezzo Valido, il minimo é 0.01€ e massimo é 30€")]
         public string Prezzo { get; set; }
         public int? CategoriId { get; set; }
-        public Category? Category { get; set; }
+        public Category? Category { get; set; }        
 
         public Pizze()
         {

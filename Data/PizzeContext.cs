@@ -1,6 +1,5 @@
 ﻿using la_mia_pizzeria_model.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
 
 namespace la_mia_pizzeria_model.Data
 {

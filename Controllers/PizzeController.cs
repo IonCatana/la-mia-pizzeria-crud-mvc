@@ -1,6 +1,8 @@
 ﻿using la_mia_pizzeria_model.Models;
 using la_mia_pizzeria_model.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 namespace la_mia_pizzeria_model.Controllers
 {
     public class PizzeController : Controller
@@ -24,22 +26,25 @@ namespace la_mia_pizzeria_model.Controllers
         //Il metodo servira per una determinata pizza descrizione quindi inserisco l'id, il parametro
         public IActionResult Details(int id)
         {
-            //dichiaro un oggetto temporaneo che sará null per ora
-            Pizze? pizzaTrovata = null;
-
             using (PizzeContext db = new PizzeContext())
             {
-                pizzaTrovata = db.Pizze.Where(pizze => pizze.Id == id).FirstOrDefault();
-            }
-            //Se la pizza é stata trovata e quindi e diverso da null, faccio un return vista "Details" 
-            if (pizzaTrovata != null)
-            {
-                return View("Details", pizzaTrovata);
-            }
-            //altrimenti se non é stata trovata inivio un messaggio di errore che segna anche l'id
-            else
-            {
-                return NotFound("La pizza con l'id " + id + "non è stato trovato");
+                try
+                {
+                    Pizze pizzaTrovata = db.Pizze
+                             .Where(pizze => pizze.Id == id).Include(Pizze => Pizze.Category)
+                             .FirstOrDefault();
+
+                    return View("Details", pizzaTrovata);
+
+                }
+                catch (InvalidOperationException ex)
+                {
+                    return NotFound("La pizza con id " + id + " non è stata trovata");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest();
+                }
             }
         }
         //Creo un metodo per aggiungere pizze alla mia pizzeria da parte dell'utente
@@ -47,25 +52,42 @@ namespace la_mia_pizzeria_model.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View("FormPizze");
+            using (PizzeContext db = new PizzeContext())
+            {
+                List<Category> categorie = db.Category.ToList();
+
+                PizzeCategorie model = new PizzeCategorie();
+                model.Pizze = new Pizze();
+                model.Categorie = categorie;
+                return View("FormPizze", model);
+            }
         }
 
         //Inserisco Il HttpPost e inserisco il validation per evitare gli hacker
         [HttpPost]
         [ValidateAntiForgeryToken]
         //Creo un metodo chiamato nuovaPizza per aggiungere le pizze, aggiungere il model
-        public IActionResult Create(Pizze nuovaPizza)
+        public IActionResult Create(PizzeCategorie data)
         {
             //se il modello non é valido ritorniamo una view
             if (!ModelState.IsValid)
             {
-                return View("FormPizze", nuovaPizza);
+                using (PizzeContext db = new PizzeContext())
+                {
+                    List<Category> categorie = db.Category.ToList();
+                    data.Categorie = categorie;
+                }
+                return View("FormPizze", data);
             }
 
             using (PizzeContext db = new PizzeContext())
             {
-                Pizze pizzaDaCreare = new Pizze(nuovaPizza.Immagine, nuovaPizza.Nome, nuovaPizza.Descrizione, nuovaPizza.Prezzo);
-                //Se il modello é coretto prendiamo la lista Pizze e il metodo get che aggiungerá questa pizza alla lista
+                Pizze nuovaPizza = new Pizze();
+                nuovaPizza.Nome = data.Pizze.Nome;
+                nuovaPizza.Descrizione = data.Pizze.Descrizione;
+                nuovaPizza.Immagine = data.Pizze.Immagine;
+                nuovaPizza.Category.Id = data.Pizze.Category.Id;
+
                 db.Pizze.Add(nuovaPizza);
                 db.SaveChanges();
             }
@@ -77,10 +99,12 @@ namespace la_mia_pizzeria_model.Controllers
         public IActionResult Update(int id)
         {
             Pizze pizzaDaModificare = null;
+            List<Category> categorie = new List<Category>();
 
             using (PizzeContext db = new PizzeContext())
             {
                 pizzaDaModificare = db.Pizze.Where(pizze => pizze.Id == id).FirstOrDefault();
+                categorie = db.Category.ToList<Category>();
             }
 
             if (pizzaDaModificare == null)
@@ -89,16 +113,24 @@ namespace la_mia_pizzeria_model.Controllers
             }
             else
             {
-                return View("Update", pizzaDaModificare);
+                PizzeCategorie model = new PizzeCategorie();
+                model.Pizze = pizzaDaModificare;
+                model.Categorie = categorie;
+                return View("Update", model);
             }
 
         }
 
         [HttpPost]
-        public IActionResult Update(int id, Pizze model)
+        public IActionResult Update(int id, PizzeCategorie model)
         {
             if (!ModelState.IsValid)
             {
+                using (PizzeContext db = new PizzeContext())
+                {
+                    List<Category> categorie = db.Category.ToList();
+                    model.Categorie = categorie;
+                }
                 return View("Update", model);
             }
 
@@ -111,10 +143,10 @@ namespace la_mia_pizzeria_model.Controllers
 
                 if (pizzaDaModificare != null)
                 {
-                    pizzaDaModificare.Nome = model.Nome;
-                    pizzaDaModificare.Descrizione = model.Descrizione;
-                    pizzaDaModificare.Immagine = model.Immagine;
-                    pizzaDaModificare.Prezzo = model.Prezzo;
+                    pizzaDaModificare.Nome = model.Pizze.Nome;
+                    pizzaDaModificare.Descrizione = model.Pizze.Descrizione;
+                    pizzaDaModificare.Immagine = model.Pizze.Immagine;
+                    pizzaDaModificare.Prezzo = model.Pizze.Prezzo;
 
                     db.SaveChanges();
 
@@ -141,7 +173,7 @@ namespace la_mia_pizzeria_model.Controllers
                     db.Pizze.Remove(pizzaDaEliminare);
                     db.SaveChanges();
 
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", "Pizze");
                 }
                 else
                 {
