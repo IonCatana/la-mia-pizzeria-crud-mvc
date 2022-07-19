@@ -1,0 +1,148 @@
+﻿@model List<Pizze>
+
+@{
+     ViewData["Title"] = "Home Page"; // -- impostazione pagina predefinita
+    Layout = "_LayoutApp";  // Per disattivare il layout della pagina predefinito
+}
+
+
+    <div class="poster">
+        <div class="poster__img">
+            <img src="img/pizzeria2.png" alt="">
+        </div>
+        <div class="poster__content">
+            <h3 class="big-text">Sentiti a casa</h3>
+            <p>L’estetica di una location raffinata, un’architettura elegante e una cucina innovativa ma tradizionale: Il nostro ristorante è la dimostrazione di come tutto questo possa coesistere in un unico spazio</p>
+        </div>
+    </div>
+
+    <div class="poster mtop-3">
+    
+    <div class="poster__content">
+        <h3 class="big-text">Tra tradizione e innovazione</h3>
+        <p>Da una delle famiglie di pizzaioli più antiche di Napoli. Gino cresce nella pizzeria di famiglia e ben presto impara i segreti della vera pizza napoletana</p>
+    </div>
+    <div class="poster__img">
+        <img src="img/pexels-vincent-rivaud-2295285.jpg" alt="">
+    </div>
+    </div>
+
+<div class="grid mtop-3" id="scopriDiPiù">
+    <div class="col">
+        <h3 class="big-text">Le nostre pizze</h3>
+    </div>
+    <div class="col">
+        <p>La nuova frontiera è l’utilizzo di farine di agricoltura biologica e l’aggiornamento continuo dei propri menù data la continua e costante ricerca delle migliori eccellenze gastronomiche italiane da proporre sulla pizza e da far conoscere attraverso la pizza…</p>
+    </div>
+</div>
+
+        
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+            </div>
+
+            <a class="button"
+                href="@Url.Action("Create", "Pizze")">
+                Aggiungi una pizza
+            </a>
+            <!-- Con il model Razor possiamo iniziare a inserire delle condizioni -->
+            <!-- Attraverso if controlliamo se non ci sono Pizze, se non ci sono risponde con un h3 altrimenti carica le pizze presenti nel else -->
+            @if(Model.Count() == 0)
+            {
+                <h3>Non ci sono Pizze Presenti</h3>
+            } else
+            {
+                <table class="table post-list-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th class="fs-1">Immagine</th>
+                        <th class="fs-1">Nome</th>
+                        <th class="fs-1">Descrizione</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                        @foreach (Pizze pizzaNellaLista in Model)
+                        {
+                            <!-- Il model é una lista di pizze, che abbiamo inserito in alto, ricordiamo che il controller passa a quel template una lisa di pizze completa -->
+                            <!-- Ricordiamo che dobbiamoo inserire un ID per ogni elemento della lista perché é richiesto dal model -->                            
+                            <tr>
+                                <td>@pizzaNellaLista.Id</td>
+                                
+                                <td class="immagine"><img class="post-list-immagine" src="@pizzaNellaLista.Immagine"></td>
+                                <td class="nome">@pizzaNellaLista.Nome</td>
+                                <td class="descrizione">@pizzaNellaLista.Descrizione</td>
+                                <!-- Inserisco il tag "a" che serve per fare il link, questo punta al metodo dettagli, del controller Pizze -->
+                                <td class="d-flex ">
+                                    <a class="btn btn-info btn-sm" href="@Url.Action("Details", "Pizze", new { id = pizzaNellaLista.Id })">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    </a>
+                                    <a class="mx-3 btn btn-warning btn-sm" href="@Url.Action("Update", "Pizze", new { id = pizzaNellaLista.Id })">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity"><polygon points="14 2 18 6 7 17 3 17 3 13 14 2"></polygon><line x1="3" y1="22" x2="21" y2="22"></line></svg>
+                                    </a>
+                                    <form action="@Url.Action("Delete", "Pizze", new {id= pizzaNellaLista.Id})" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            
+                        }
+                  </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+  
+<div class="poster mtop-3">
+    
+    <div class="poster__content">
+        <h3 class="big-text">Da oggi gustaci anche a casa tua!</h3>
+        <p>Il nostro servizio delivery è attivo 7 giorni su 7 dalle oe 11:00 alle 24:00. Goditi la bontà delle nostre pizze comodamente seduto sul tuo divano</p>
+        <a href="" class="button">Ordina adesso</a>
+    </div>
+    <div class="poster__img">
+        <img src="img/delivery.jpg" alt="">
+    </div>
+</div>
+
+
+
+
+@section OtherSection {
+
+<footer class="footer mtop-3">
+<div class="grid">
+    <div class="col">
+        <h4 class="normal-text tw">Chi siamo</h4>
+        <p>Pizza Restaurant</p>
+    </div>
+    <div class="col">
+        <h4 class="normal-text tw">Dove ci trovi</h4>
+        <p>Cascina Merlata, Milano</p>
+    </div>
+    <div class="col">
+        <h4 class="normal-text tw">Lavora con noi</h4>
+        <p>Pizza.Restaurant@gmail.com</p>
+        <p>+(00) 0001112223334</p>
+
+    </div>
+    <div class="col">
+        <h4 class="normal-text tw">I nostri contatti</h4>
+        <p>Email</p>
+        <p>Instagram</p>
+        <p>Facebook</p>
+    </div>
+</div>
+</footer>
+}
