@@ -4,6 +4,7 @@ namespace la_mia_pizzeria_model.Models
 {
     public class Category
     {
+        
         [Key]
         [Required(ErrorMessage = "Il campo é obbligatorio")]
         public int Id { get; set; }

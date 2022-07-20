@@ -12,5 +12,12 @@ namespace la_mia_pizzeria_model.Data
         {
             optionsBuilder.UseSqlServer("Data Source=localhost;Database=db-pizza;Integrated Security=True");
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Category>().HasData(
+                new Category { Id = 1, NomeCategoria = "Pizze classiche" },               
+                new Category { Id = 4, NomeCategoria = "Pizze di mare" });
+        }
     }
 }

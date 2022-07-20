@@ -1,4 +1,5 @@
-﻿namespace la_mia_pizzeria_model.Models
+﻿
+namespace la_mia_pizzeria_model.Models
 {
     public class PizzeCategorie
     {

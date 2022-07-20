@@ -12,8 +12,8 @@ using la_mia_pizzeria_model.Data;
 namespace la_mia_pizzeria_model.Migrations
 {
     [DbContext(typeof(PizzeContext))]
-    [Migration("20220719143443_Category")]
-    partial class Category
+    [Migration("20220720120351_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -40,6 +40,18 @@ namespace la_mia_pizzeria_model.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Category");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            NomeCategoria = "Pizze classiche"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            NomeCategoria = "Pizze di mare"
+                        });
                 });
 
             modelBuilder.Entity("la_mia_pizzeria_model.Models.Pizze", b =>

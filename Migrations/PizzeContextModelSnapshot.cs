@@ -38,6 +38,18 @@ namespace la_mia_pizzeria_model.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Category");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            NomeCategoria = "Pizze classiche"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            NomeCategoria = "Pizze di mare"
+                        });
                 });
 
             modelBuilder.Entity("la_mia_pizzeria_model.Models.Pizze", b =>
