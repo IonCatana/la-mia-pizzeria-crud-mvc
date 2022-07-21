@@ -4,6 +4,8 @@ namespace la_mia_pizzeria_model.Models
 {
     public class Pizze
     {
+        internal object CategoryId;
+
         //Inserisco required che obbliga all'utente di inserire quel campo o una determinata informazione, se non li rispetta non puó andare avanti
         [Key]
         public int Id { get; internal set; }

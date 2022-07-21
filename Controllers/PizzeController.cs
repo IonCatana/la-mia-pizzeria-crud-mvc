@@ -86,7 +86,8 @@ namespace la_mia_pizzeria_model.Controllers
                 nuovaPizza.Nome = data.Pizze.Nome;
                 nuovaPizza.Descrizione = data.Pizze.Descrizione;
                 nuovaPizza.Immagine = data.Pizze.Immagine;
-                nuovaPizza.Category.Id = data.Pizze.Category.Id;
+                nuovaPizza.Prezzo = data.Pizze.Prezzo;
+                nuovaPizza.CategoryId = data.Pizze.CategoryId;
 
                 db.Pizze.Add(nuovaPizza);
                 db.SaveChanges();
@@ -98,7 +99,7 @@ namespace la_mia_pizzeria_model.Controllers
         [HttpGet]
         public IActionResult Update(int id)
         {
-            Pizze pizzaDaModificare = null;
+            Pizze? pizzaDaModificare = null;
             List<Category> categorie = new List<Category>();
 
             using (PizzeContext db = new PizzeContext())
@@ -134,7 +135,7 @@ namespace la_mia_pizzeria_model.Controllers
                 return View("Update", model);
             }
 
-            Pizze pizzaDaModificare = null;
+            Pizze? pizzaDaModificare = null;
 
             using (PizzeContext db = new PizzeContext())
             {
@@ -147,6 +148,7 @@ namespace la_mia_pizzeria_model.Controllers
                     pizzaDaModificare.Descrizione = model.Pizze.Descrizione;
                     pizzaDaModificare.Immagine = model.Pizze.Immagine;
                     pizzaDaModificare.Prezzo = model.Pizze.Prezzo;
+                    pizzaDaModificare.CategoryId = model.Pizze.CategoryId;
 
                     db.SaveChanges();
 

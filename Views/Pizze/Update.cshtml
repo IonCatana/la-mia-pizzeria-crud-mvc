@@ -30,7 +30,7 @@
                 </div>
                 <div class="mb-3">
                     <strong>Categoria:</strong>
-                    <select asp-for="Pizze.Category.Id" class="form-select" aria-label="Default select example"> 
+                    <select asp-for="Pizze.CategoryId" class="form-select" aria-label="Default select example"> 
                         <option value="">Selezione categoria</option>
                         @foreach(Category category in Model.Categorie)
                         {
